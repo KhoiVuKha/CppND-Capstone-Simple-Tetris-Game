@@ -1,9 +1,10 @@
-#include "game.h"
 #include <iostream>
 
-int main() {
-  Game game;
-  while (game.tick());
+#include "game.h"
 
-  return 0;
+int main() {
+    Game game;
+    while (game.tick());
+
+    return 0;
 }

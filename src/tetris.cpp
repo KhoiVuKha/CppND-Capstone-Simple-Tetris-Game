@@ -1,189 +1,186 @@
 #include "tetris.h"
 
-Tetris::Tetris(Type type): type_(type), x_(10 / 2 - 4 / 2), y_(0), angle_(0) {
-}
+Tetris::Tetris(Type type) : type_(type), x_(10 / 2 - 4 / 2), y_(0), angle_(0) {}
 
 void Tetris::draw(SDL_Renderer *renderer) {
-  switch (type_) {
-  case I:
-    SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
-    break;
-  case J:
-    SDL_SetRenderDrawColor(renderer, 0x80, 0x80, 0x80, 0xff);
-    break;
-  case L:
-    SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0xff, 0xff);
-    break;
-  case O:
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x7f, 0xff);
-    break;
-  case S:
-    SDL_SetRenderDrawColor(renderer, 0xff, 0x7f, 0x00, 0xff);
-    break;
-  case T:
-    SDL_SetRenderDrawColor(renderer, 0x7f, 0x40, 0x00, 0xff);
-    break;
-  case Z:
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x7f, 0x7f, 0xff);
-    break;
-  }
-
-  for (auto x = 0; x < 4; ++x) {
-    for (auto y = 0; y < 4; ++y) {
-      if (isBlock(x, y)) {
-        SDL_Rect rect{(x + x_) * 720 / 2 / 10 + 1, (y + y_) * 720 / 2 / 10 + 1, 720 / 2 / 10 - 2, 720 / 2 / 10 - 2};
-        SDL_RenderFillRect(renderer, &rect);
-      }
+    switch (type_) {
+        case I:
+            SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
+            break;
+        case J:
+            SDL_SetRenderDrawColor(renderer, 0x80, 0x80, 0x80, 0xff);
+            break;
+        case L:
+            SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0xff, 0xff);
+            break;
+        case O:
+            SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x7f, 0xff);
+            break;
+        case S:
+            SDL_SetRenderDrawColor(renderer, 0xff, 0x7f, 0x00, 0xff);
+            break;
+        case T:
+            SDL_SetRenderDrawColor(renderer, 0x7f, 0x40, 0x00, 0xff);
+            break;
+        case Z:
+            SDL_SetRenderDrawColor(renderer, 0x00, 0x7f, 0x7f, 0xff);
+            break;
     }
-  }
+
+    for (auto x = 0; x < 4; ++x) {
+        for (auto y = 0; y < 4; ++y) {
+            if (isBlock(x, y)) {
+                SDL_Rect rect{(x + x_) * 720 / 2 / 10 + 1,
+                              (y + y_) * 720 / 2 / 10 + 1, 720 / 2 / 10 - 2,
+                              720 / 2 / 10 - 2};
+                SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
 }
 
 void Tetris::move(int dx, int dy) {
-  x_ += dx;
-  y_ += dy;
+    x_ += dx;
+    y_ += dy;
 }
 
 void Tetris::rotate() {
-  angle_ += 3;
-  angle_ %= 4;
+    angle_ += 3;
+    angle_ %= 4;
 }
 
 bool Tetris::isBlock(int x, int y) const {
-  static const char *Shapes[][4] = {
-    {
-      " *  "
-      " *  "
-      " *  "
-      " *  ",
-      "    "
-      "****"
-      "    "
-      "    ",
-      " *  "
-      " *  "
-      " *  "
-      " *  ",
-      "    "
-      "****"
-      "    "
-      "    ",
-    },
-    {
-      "  * "
-      "  * "
-      " ** "
-      "    ",
-      "    "
-      "*   "
-      "*** "
-      "    ",
-      " ** "
-      " *  "
-      " *  "
-      "    ",
-      "    "
-      "    "
-      "*** "
-      "  * ",
-    },
-    {
-      " *  "
-      " *  "
-      " ** "
-      "    ",
-      "    "
-      "*** "
-      "*   "
-      "    ",
-      " ** "
-      "  * "
-      "  * "
-      "    ",
-      "  * "
-      "*** "
-      "    "
-      "    ",
-    },
-    {
-      "    "
-      " ** "
-      " ** "
-      "    ",
-      "    "
-      " ** "
-      " ** "
-      "    ",
-      "    "
-      " ** "
-      " ** "
-      "    ",
-      "    "
-      " ** "
-      " ** "
-      "    ",
-    },
-    {
-      "  * "
-      " ** "
-      " *  "
-      "    ",
-      "    "
-      "**  "
-      " ** "
-      "    ",
-      "  * "
-      " ** "
-      " *  "
-      "    ",
-      "    "
-      "**  "
-      " ** "
-      "    ",
-    },
-    {
-      " *  "
-      " ** "
-      " *  "
-      "    ",
-      "    "
-      "*** "
-      " *  "
-      "    ",
-      " *  "
-      "**  "
-      " *  "
-      "    ",
-      " *  "
-      "*** "
-      "    "
-      "    ",
-    },
-    {
-      " *  "
-      " ** "
-      "  * "
-      "    ",
-      "    "
-      " ** "
-      "**  "
-      "    ",
-      " *  "
-      " ** "
-      "  * "
-      "    ",
-      "    "
-      " ** "
-      "**  "
-      "    ",
-    },
-  };
-  return Shapes[type_][angle_][x + y * 4] == '*';
+    static const char *Shapes[][4] = {
+        {
+            " *  "
+            " *  "
+            " *  "
+            " *  ",
+            "    "
+            "****"
+            "    "
+            "    ",
+            " *  "
+            " *  "
+            " *  "
+            " *  ",
+            "    "
+            "****"
+            "    "
+            "    ",
+        },
+        {
+            "  * "
+            "  * "
+            " ** "
+            "    ",
+            "    "
+            "*   "
+            "*** "
+            "    ",
+            " ** "
+            " *  "
+            " *  "
+            "    ",
+            "    "
+            "    "
+            "*** "
+            "  * ",
+        },
+        {
+            " *  "
+            " *  "
+            " ** "
+            "    ",
+            "    "
+            "*** "
+            "*   "
+            "    ",
+            " ** "
+            "  * "
+            "  * "
+            "    ",
+            "  * "
+            "*** "
+            "    "
+            "    ",
+        },
+        {
+            "    "
+            " ** "
+            " ** "
+            "    ",
+            "    "
+            " ** "
+            " ** "
+            "    ",
+            "    "
+            " ** "
+            " ** "
+            "    ",
+            "    "
+            " ** "
+            " ** "
+            "    ",
+        },
+        {
+            "  * "
+            " ** "
+            " *  "
+            "    ",
+            "    "
+            "**  "
+            " ** "
+            "    ",
+            "  * "
+            " ** "
+            " *  "
+            "    ",
+            "    "
+            "**  "
+            " ** "
+            "    ",
+        },
+        {
+            " *  "
+            " ** "
+            " *  "
+            "    ",
+            "    "
+            "*** "
+            " *  "
+            "    ",
+            " *  "
+            "**  "
+            " *  "
+            "    ",
+            " *  "
+            "*** "
+            "    "
+            "    ",
+        },
+        {
+            " *  "
+            " ** "
+            "  * "
+            "    ",
+            "    "
+            " ** "
+            "**  "
+            "    ",
+            " *  "
+            " ** "
+            "  * "
+            "    ",
+            "    "
+            " ** "
+            "**  "
+            "    ",
+        },
+    };
+    return Shapes[type_][angle_][x + y * 4] == '*';
 }
 
-int Tetris::x() const {
-  return x_;
-}
+int Tetris::x() const { return x_; }
 
-int Tetris::y() const {
-  return y_;
-}
+int Tetris::y() const { return y_; }
