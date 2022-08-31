@@ -17,8 +17,7 @@ Game::Game(const std::size_t screen_width, const std::size_t screen_height)
     // Create Window
     sdl_window_ = SDL_CreateWindow(
         "Tetris Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        screen_width, screen_height,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+        screen_width, screen_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
     if (nullptr == sdl_window_) {
         std::cerr << "Window could not be created.\n";
@@ -32,7 +31,7 @@ Game::Game(const std::size_t screen_width, const std::size_t screen_height)
         std::cerr << "Renderer could not be created.\n";
         std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
     }
-    
+
     title_timestamp_ = SDL_GetTicks();
     frame_count_ = 0;
 }
@@ -46,40 +45,38 @@ Game::~Game() {
 bool Game::updateTheGame(std::size_t target_frame_duration) {
     SDL_Event e;
     Tetromino t = tetromino_;
-    if (SDL_WaitEventTimeout(&e, 250)) {
-        switch (e.type) {
-            case SDL_KEYDOWN: {
-                switch (e.key.keysym.sym) {
-                    case SDLK_DOWN: {
-                        t.move(0, 1);
-                        if (!well_.isCollision(t)) tetromino_ = t;
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        t.move(1, 0);
-                        if (!well_.isCollision(t)) tetromino_ = t;
-                        break;
-                    }
-                    case SDLK_LEFT: {
-                        t.move(-1, 0);
-                        if (!well_.isCollision(t)) tetromino_ = t;
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        t.rotate();
-                        if (!well_.isCollision(t)) {
-                            tetromino_ = t;
-                        }
-                        break;
-                    }
+    
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            return false;
+        } else if (e.type == SDL_KEYDOWN) {
+            switch (e.key.keysym.sym) {
+                case SDLK_DOWN: {
+                    t.move(0, 1);
+                    if (!well_.isCollision(t)) tetromino_ = t;
+                    break;
                 }
-                break;
-            }
-            case SDL_QUIT: {
-                return false;
+                case SDLK_RIGHT: {
+                    t.move(1, 0);
+                    if (!well_.isCollision(t)) tetromino_ = t;
+                    break;
+                }
+                case SDLK_LEFT: {
+                    t.move(-1, 0);
+                    if (!well_.isCollision(t)) tetromino_ = t;
+                    break;
+                }
+                case SDLK_SPACE: {
+                    t.rotate();
+                    if (!well_.isCollision(t)) {
+                        tetromino_ = t;
+                    }
+                    break;
+                }
             }
         }
     }
+
     SDL_SetRenderDrawColor(sdl_renderer_, 0, 0, 0, 0xff);
     SDL_RenderClear(sdl_renderer_);
     well_.draw(sdl_renderer_);
