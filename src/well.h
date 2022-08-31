@@ -13,6 +13,8 @@ class Well {
     bool isCollision(const Tetris &t) const;
     void unite(const Tetris &);
 
+    int score {0};
+
    private:
     bool data[Width][Height];
 };

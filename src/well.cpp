@@ -65,6 +65,8 @@ void Well::unite(const Tetris &t) {
             for (int x = 0; x < Width; ++x) {
                 data[x][0] = false;
             }
+
+            score += 100;
         }
     }
 }
