@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "controller.h"
+
 Game::Game(const std::size_t screen_width, const std::size_t screen_height)
     : tetromino_{static_cast<Tetromino::Type>(rand() % 7)},
       moveTime_(SDL_GetTicks()),
@@ -31,9 +33,6 @@ Game::Game(const std::size_t screen_width, const std::size_t screen_height)
         std::cerr << "Renderer could not be created.\n";
         std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
     }
-
-    title_timestamp_ = SDL_GetTicks();
-    frame_count_ = 0;
 }
 
 Game::~Game() {
@@ -42,53 +41,18 @@ Game::~Game() {
     SDL_Quit();
 }
 
-bool Game::updateTheGame(std::size_t target_frame_duration) {
-    SDL_Event e;
-    Tetromino t = tetromino_;
-    
-    while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) {
-            return false;
-        } else if (e.type == SDL_KEYDOWN) {
-            switch (e.key.keysym.sym) {
-                case SDLK_DOWN: {
-                    t.move(0, 1);
-                    if (!well_.isCollision(t)) tetromino_ = t;
-                    break;
-                }
-                case SDLK_RIGHT: {
-                    t.move(1, 0);
-                    if (!well_.isCollision(t)) tetromino_ = t;
-                    break;
-                }
-                case SDLK_LEFT: {
-                    t.move(-1, 0);
-                    if (!well_.isCollision(t)) tetromino_ = t;
-                    break;
-                }
-                case SDLK_SPACE: {
-                    t.rotate();
-                    if (!well_.isCollision(t)) {
-                        tetromino_ = t;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
+bool Game::update() {
     SDL_SetRenderDrawColor(sdl_renderer_, 0, 0, 0, 0xff);
     SDL_RenderClear(sdl_renderer_);
     well_.draw(sdl_renderer_);
     tetromino_.draw(sdl_renderer_);
     if (SDL_GetTicks() > moveTime_) {
         moveTime_ += 1000;
-        t = tetromino_;
+        Tetromino t = tetromino_;
         t.move(0, 1);
         checkCollision(t);
     }
     SDL_RenderPresent(sdl_renderer_);
-    runWindowTitle(target_frame_duration);
     return true;
 };
 
@@ -104,27 +68,43 @@ void Game::checkCollision(const Tetromino &t) {
     }
 }
 
-void Game::runWindowTitle(std::size_t target_frame_duration) {
-    frame_start_ = SDL_GetTicks();
-    frame_end_ = SDL_GetTicks();
+void Game::run(Controller const &controller,
+               std::size_t target_frame_duration) {
+    uint32_t title_timestamp = SDL_GetTicks();
+    uint32_t frame_start;
+    uint32_t frame_end;
+    uint32_t frame_duration;
+    int frame_count = 0;
+    bool running = true;
 
-    // Keep track of how long each loop through the input/update/render cycle
-    // takes.
-    frame_count_++;
-    frame_duration_ = frame_end_ - frame_start_;
+    while (running) {
+        frame_start = SDL_GetTicks();
 
-    // After every second, update the window title.
-    if (frame_end_ - title_timestamp_ >= 1000) {
-        updateWindowTitle(well_.score, frame_count_);
-        frame_count_ = 0;
-        title_timestamp_ = frame_end_;
-    }
+        // Input, Update, Render - the main game loop.
+        controller.HandleInput(running, tetromino_, well_);
+        update();
+        // sdl_renderer_.Render(snake, food);
 
-    // If the time for this frame is too small (i.e. frame_duration_ is
-    // smaller than the target ms_per_frame), delay the loop to
-    // achieve the correct frame rate.
-    if (frame_duration_ < target_frame_duration) {
-        SDL_Delay(target_frame_duration - frame_duration_);
+        frame_end = SDL_GetTicks();
+
+        // Keep track of how long each loop through the input/update/render
+        // cycle takes.
+        frame_count++;
+        frame_duration = frame_end - frame_start;
+
+        // After every second, update the window title.
+        if (frame_end - title_timestamp >= 1000) {
+            updateWindowTitle(well_.score, frame_count);
+            frame_count = 0;
+            title_timestamp = frame_end;
+        }
+
+        // If the time for this frame is too small (i.e. frame_duration is
+        // smaller than the target ms_per_frame), delay the loop to
+        // achieve the correct frame rate.
+        if (frame_duration < target_frame_duration) {
+            SDL_Delay(target_frame_duration - frame_duration);
+        }
     }
 }
 

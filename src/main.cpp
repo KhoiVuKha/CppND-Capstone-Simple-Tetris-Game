@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "controller.h"
 #include "game.h"
 
 int main() {
@@ -8,8 +9,9 @@ int main() {
     constexpr int kFramesPerSecond{60};
 	constexpr int kMsPerFrame{1000 / kFramesPerSecond};
     
+    Controller controller;
     Game game(kScreenWidth, kScreenHeight);
-    while (game.updateTheGame(kMsPerFrame));
+    game.run(controller, kMsPerFrame);
 
     return 0;
 }
