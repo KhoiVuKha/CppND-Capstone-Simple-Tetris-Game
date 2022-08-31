@@ -68,3 +68,7 @@ void Game::run(Controller const &controller, Renderer &renderer,
         }
     }
 }
+
+int Game::getScore() const {
+    return well_.score;
+}
