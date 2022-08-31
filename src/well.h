@@ -3,15 +3,15 @@
 
 #include <SDL2/SDL.h>
 
-#include "tetris.h"
+#include "tetromino.h"
 
 class Well {
    public:
     Well();
     void draw(SDL_Renderer *);
     enum { Width = 10, Height = 20 };
-    bool isCollision(const Tetris &t) const;
-    void unite(const Tetris &);
+    bool isCollision(const Tetromino &t) const;
+    void unite(const Tetromino &);
 
     int score {0};
 
@@ -19,4 +19,4 @@ class Well {
     bool data[Width][Height];
 };
 
-#endif
+#endif // End of WELL_H

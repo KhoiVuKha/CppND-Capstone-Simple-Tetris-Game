@@ -19,7 +19,7 @@ void Well::draw(SDL_Renderer *renderer) {
     }
 }
 
-bool Well::isCollision(const Tetris &t) const {
+bool Well::isCollision(const Tetromino &t) const {
     for (int x = 0; x < 4; ++x) {
         for (int y = 0; y < 4; ++y) {
             if (t.isBlock(x, y)) {
@@ -37,7 +37,7 @@ bool Well::isCollision(const Tetris &t) const {
     return false;
 }
 
-void Well::unite(const Tetris &t) {
+void Well::unite(const Tetromino &t) {
     for (int x = 0; x < 4; ++x) {
         for (int y = 0; y < 4; ++y) {
             if (t.isBlock(x, y)) {

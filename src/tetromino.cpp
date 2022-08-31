@@ -1,8 +1,8 @@
-#include "tetris.h"
+#include "tetromino.h"
 
-Tetris::Tetris(Type type) : type_(type), x_(10 / 2 - 4 / 2), y_(0), angle_(0) {}
+Tetromino::Tetromino(Type type) : type_(type), x_(10 / 2 - 4 / 2), y_(0), angle_(0) {}
 
-void Tetris::draw(SDL_Renderer *renderer) {
+void Tetromino::draw(SDL_Renderer *renderer) {
     switch (type_) {
         case I:
             SDL_SetRenderDrawColor(renderer, 0xff, 0x00, 0x00, 0xff);
@@ -39,17 +39,17 @@ void Tetris::draw(SDL_Renderer *renderer) {
     }
 }
 
-void Tetris::move(int dx, int dy) {
+void Tetromino::move(int dx, int dy) {
     x_ += dx;
     y_ += dy;
 }
 
-void Tetris::rotate() {
+void Tetromino::rotate() {
     angle_ += 3;
     angle_ %= 4;
 }
 
-bool Tetris::isBlock(int x, int y) const {
+bool Tetromino::isBlock(int x, int y) const {
     static const char *Shapes[][4] = {
         {
             " *  "
@@ -181,6 +181,6 @@ bool Tetris::isBlock(int x, int y) const {
     return Shapes[type_][angle_][x + y * 4] == '*';
 }
 
-int Tetris::x() const { return x_; }
+int Tetromino::x() const { return x_; }
 
-int Tetris::y() const { return y_; }
+int Tetromino::y() const { return y_; }

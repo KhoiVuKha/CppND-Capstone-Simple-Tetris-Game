@@ -1,12 +1,12 @@
-#ifndef TETRIS_H
-#define TETRIS_H
+#ifndef TETROMINO_H
+#define TETROMINO_H
 
 #include <SDL2/SDL.h>
 
-class Tetris {
+class Tetromino {
    public:
     enum Type { I = 0, J, L, O, S, T, Z };
-    Tetris(Type);
+    Tetromino(Type);
     void draw(SDL_Renderer *);
     void move(int dx, int dy);
     void rotate();
@@ -21,4 +21,4 @@ class Tetris {
     int angle_;  // 0 - 0deg, 1 - 90deg, 2 - 180deg, 3 - 270deg
 };
 
-#endif
+#endif // End of TETROMINO_H

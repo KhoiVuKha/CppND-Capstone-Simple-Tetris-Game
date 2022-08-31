@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 Game::Game(const std::size_t screen_width, const std::size_t screen_height)
-    : tetris_{static_cast<Tetris::Type>(rand() % 7)},
+    : tetromino_{static_cast<Tetromino::Type>(rand() % 7)},
       moveTime_(SDL_GetTicks()),
       screen_width_(screen_width),
       screen_height_(screen_height) {
@@ -45,30 +45,30 @@ Game::~Game() {
 
 bool Game::updateTheGame(std::size_t target_frame_duration) {
     SDL_Event e;
-    Tetris t = tetris_;
+    Tetromino t = tetromino_;
     if (SDL_WaitEventTimeout(&e, 250)) {
         switch (e.type) {
             case SDL_KEYDOWN: {
                 switch (e.key.keysym.sym) {
                     case SDLK_DOWN: {
                         t.move(0, 1);
-                        if (!well_.isCollision(t)) tetris_ = t;
+                        if (!well_.isCollision(t)) tetromino_ = t;
                         break;
                     }
                     case SDLK_RIGHT: {
                         t.move(1, 0);
-                        if (!well_.isCollision(t)) tetris_ = t;
+                        if (!well_.isCollision(t)) tetromino_ = t;
                         break;
                     }
                     case SDLK_LEFT: {
                         t.move(-1, 0);
-                        if (!well_.isCollision(t)) tetris_ = t;
+                        if (!well_.isCollision(t)) tetromino_ = t;
                         break;
                     }
                     case SDLK_SPACE: {
                         t.rotate();
                         if (!well_.isCollision(t)) {
-                            tetris_ = t;
+                            tetromino_ = t;
                         }
                         break;
                     }
@@ -83,10 +83,10 @@ bool Game::updateTheGame(std::size_t target_frame_duration) {
     SDL_SetRenderDrawColor(sdl_renderer_, 0, 0, 0, 0xff);
     SDL_RenderClear(sdl_renderer_);
     well_.draw(sdl_renderer_);
-    tetris_.draw(sdl_renderer_);
+    tetromino_.draw(sdl_renderer_);
     if (SDL_GetTicks() > moveTime_) {
         moveTime_ += 1000;
-        t = tetris_;
+        t = tetromino_;
         t.move(0, 1);
         checkCollision(t);
     }
@@ -95,15 +95,15 @@ bool Game::updateTheGame(std::size_t target_frame_duration) {
     return true;
 };
 
-void Game::checkCollision(const Tetris &t) {
+void Game::checkCollision(const Tetromino &t) {
     if (well_.isCollision(t)) {
-        well_.unite(tetris_);
-        tetris_ = Tetris{static_cast<Tetris::Type>(rand() % 7)};
-        if (well_.isCollision(tetris_)) {
+        well_.unite(tetromino_);
+        tetromino_ = Tetromino{static_cast<Tetromino::Type>(rand() % 7)};
+        if (well_.isCollision(tetromino_)) {
             well_ = Well();
         }
     } else {
-        tetris_ = t;
+        tetromino_ = t;
     }
 }
 
