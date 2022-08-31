@@ -14,6 +14,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} src)
 
-add_executable(SimpleTetrisGame src/main.cpp src/game.cpp src/well.cpp src/tetromino.cpp src/controller.cpp)
+add_executable(SimpleTetrisGame src/main.cpp src/game.cpp src/well.cpp src/tetromino.cpp src/controller.cpp src/renderer.cpp)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 target_link_libraries(SimpleTetrisGame ${SDL2_LIBRARIES})

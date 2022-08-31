@@ -11,4 +11,4 @@ class Controller {
    private:
 };
 
-#endif  // End of CONTROLLER_H
+#endif // End of CONTROLLER_H
