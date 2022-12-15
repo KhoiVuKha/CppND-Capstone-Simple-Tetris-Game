@@ -27,11 +27,17 @@ Here is image captured from the game:
   >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source.
   * MacOS chip M2:
   `git clone https://github.com/libsdl-org/SDL.git -b SDL2`
+  
   `cd SDL`
+  
   `mkdir build`
+  
   `cd build`
+  
   `../configure`
+  
   `make`
+  
   `sudo make install`
   
 * gcc/g++ >= 5.4
