@@ -26,13 +26,13 @@ Here is image captured from the game:
   * All installation instructions can be found [here](https://wiki.libsdl.org/Installation)
   >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source.
   * MacOS chip M2:
-  `git clone https://github.com/libsdl-org/SDL.git -b SDL2
-  cd SDL
-  mkdir build
-  cd build
-  ../configure
-  make
-  sudo make install`
+  `git clone https://github.com/libsdl-org/SDL.git -b SDL2`
+  `cd SDL`
+  `mkdir build`
+  `cd build`
+  `../configure`
+  `make`
+  `sudo make install`
   
 * gcc/g++ >= 5.4
   * Linux: gcc / g++ is installed by default on most Linux distros
